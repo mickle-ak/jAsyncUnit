@@ -1,0 +1,31 @@
+name: publish to MavenCentrale (over sontype) on release tags (started with "v")
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: 'adopt'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Publish with Gradle
+        env:
+          signingKey64: ${{secrets.SIGNING_KEY_64}}
+          signingPassword64: ${{secrets.SIGNING_PASSWORD_64}}
+          sonatypeUsername: ${{secrets.SONATYPE_USERNAME}}
+          sonatypePassword64: ${{secrets.SONATYPE_PASSWORD_64}}
+        run: |
+          echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
+          ./gradlew build publishToSonatype closeAndReleaseSonatypeStagingRepository
