@@ -8,3 +8,5 @@
 
 synchron start of asynchron subprocesses in unit tests - synchron start of `Feature`, `SwingWorker` etc. to simpler verify of result of (in
 production asynchron) invocations.
+
+NOTE: It is not implemented jet. Only placeholder for future implementation. 
